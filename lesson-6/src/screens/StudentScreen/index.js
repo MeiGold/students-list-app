@@ -33,7 +33,7 @@ const StudentScreen = ({match, history}) => {
     values => {
       if (studentId) {
         APIService.updateStudent(studentId, values);
-      } else {
+      } else {``
         APIService.addStudent(values);
       }
 
