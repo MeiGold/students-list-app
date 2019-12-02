@@ -163,3 +163,7 @@ export const deleteTask = taskId => {
 
   return null;
 };
+export const checkStudentId = studentId => {
+  const student = students.find(s => s.id === studentId);
+  return student;
+};

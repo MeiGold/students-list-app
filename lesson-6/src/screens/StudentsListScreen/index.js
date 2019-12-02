@@ -8,7 +8,10 @@ import {
   ListSubheader,
   Fab,
   makeStyles,
+  Button,
+
 } from '@material-ui/core';
+import {Delete as DeleteIcon} from "@material-ui/icons";
 import {Add as AddIcon} from '@material-ui/icons';
 import StudentsList from '../common/StudentsList';
 import {Link} from 'react-router-dom';
@@ -46,6 +49,14 @@ export default () => {
                   primary={student.name}
                   secondary={student.address}
                 />
+                <Button
+                  component={Link}
+                  to={`/students/delete/${student.id}`}
+                  color="secondary"
+                >
+                <DeleteIcon/>
+                </Button>
+
               </ListItem>
             ))
           }

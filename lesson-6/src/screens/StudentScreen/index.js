@@ -1,14 +1,9 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import * as APIService from '../../services/APIService';
-import {
-  Container,
-  Typography,
-  Button,
-  TextField,
-  makeStyles,
-} from '@material-ui/core';
-import {Link} from 'react-router-dom';
-import {Form, Field} from 'react-final-form';
+import {Button, Container, makeStyles, TextField, Typography,} from '@material-ui/core';
+import {Link, Redirect} from 'react-router-dom';
+import {Field, Form} from 'react-final-form';
+import {checkStudentId} from "../../services/APIService";
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -47,45 +42,97 @@ const StudentScreen = ({match, history}) => {
     [studentId, history]
   );
 
-  const classes = useStyles();
+  const validate = async values => {
+    
+    const errors = {};
+    const checkImage = new Promise((resolve, reject) => {
+        let img = new Image();
+        img.onload = function () {
+            resolve(true);
+        };
+        img.onerror = function () {
+            reject(false);
+        };
+        img.src = values.avatar;
+    });
+    await checkImage.then(
+        () => {
+            console.log("Not found")
+        }
+    ).catch(
+        () => {
+            errors.avatar = true
+        }
+    );
+    if (!values.avatar) {
+      errors.avatar = 'Please fill out the avatar';
+    }
+
+    if (!values.name) {
+      errors.name = 'Please fill out the name';
+    }
+
+    if (!values.address) {
+      errors.address = 'Please fill out the address';
+    }
+
+  
+    return errors;
+};
+
+const classes = useStyles();
+
+if (studentId) {
+    if(!checkStudentId(studentId))
+    return (
+        <Redirect to="/404-not-found"/>
+    );
+}
+
 
   return (
     <Container maxWidth="sm">
       <Typography variant="h6" className={classes.title}>
         {studentId ? 'Update Student' : 'Create Student'}
       </Typography>
-      <Form onSubmit={handleFormSubmit} initialValues={student}>
+      <Form onSubmit={handleFormSubmit} validate={validate} initialValues={student}>
         {({handleSubmit}) => (
           <>
             <Field name="avatar">
-              {({input}) => (
+            {({input, meta}) => (
                 <TextField
-                  className={classes.field}
-                  label="Avatar URL"
-                  variant="outlined"
-                  fullWidth
-                  {...input}
+                error={meta.error && meta.touched}
+                className={classes.field}
+                label="Avatar URL"
+                variant="outlined"
+                fullWidth
+                helperText={meta.touched ? meta.error : ''}
+                {...input}
                 />
               )}
             </Field>
             <Field name="name">
-              {({input}) => (
+              {({input, meta}) => (
                 <TextField
+                  error={meta.error && meta.touched}
                   className={classes.field}
                   label="Name"
                   variant="outlined"
                   fullWidth
+                  helperText={meta.touched ? meta.error : ''}
                   {...input}
                 />
               )}
             </Field>
             <Field name="address">
-              {({input}) => (
+              {({input, meta}) => (
                 <TextField
+                  error={meta.error && meta.touched}
                   className={classes.field}
                   label="Address"
                   variant="outlined"
                   fullWidth
+                  helperText={meta.touched ? meta.error : ''}
                   {...input}
                 />
               )}

@@ -13,6 +13,7 @@ import TasksListScreen from '../TasksListScreen';
 import TaskScreen from '../TaskScreen';
 import TaskDeleteScreen from '../TaskDeleteScreen';
 import MainScreen from '../MainScreen';
+import Error from '../Error'
 import {Switch, BrowserRouter, Route} from 'react-router-dom';
 
 const theme = createMuiTheme({
@@ -58,6 +59,7 @@ const Root = () => {
                 exact
                 component={TaskDeleteScreen}
               />
+              <Route path="/404-not-found" exact component={Error} />
             </Switch>
           </div>
         </BrowserRouter>
